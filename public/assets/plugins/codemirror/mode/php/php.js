@@ -17,7 +17,7 @@
     return obj;
   }
 
-  // Helper for phpString
+  // helper for phpString
   function matchSequence(list, end, escapes) {
     if (list.length == 0) return phpString(end);
     return function (stream, state) {

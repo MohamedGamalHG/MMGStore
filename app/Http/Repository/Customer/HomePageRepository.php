@@ -111,7 +111,7 @@ class HomePageRepository implements HomePageRepositoryInterface
         //$subfilter = SubFilter::with('filter')->get();
 
         $product = Product::with('images')->get();
-        // We make Helper function without put category in all pages that has navbar
+        // We make helper function without put category in all pages that has navbar
         // so that navbar contain the data of Category so we make helper function to that
         return view('Customer.product_list',compact('product'));
     }
