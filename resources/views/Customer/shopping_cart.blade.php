@@ -43,7 +43,7 @@
                                     </button>
                                 </div>--}}
                                 <input type="hidden" name="id" value="{{$cart->id}}">
-                                <input type="number" name="add_quantity" value="0" min="1" max="3" class="form-control form-control-sm bg-secondary text-center" >
+                                <input type="number"  name="add_quantity" value="{{$cart->quantity}}" min="1" max="3" class="form-control form-control-sm bg-secondary text-center" >
                                 {{--<div class=" input-group-btn">
                                     <button class="btn btn-sm btn-primary btn-plus">
                                         <i class="fa fa-plus"></i>
@@ -54,7 +54,7 @@
                             </div>
                             </form>
                         </td>
-                        <td class="align-middle">{{$cart->total}}</td>
+                        <td class="align-middle">{{$cart->price * $cart->quantity}}</td>
                         <td class="align-middle">
                         <form action="{{route('item-delete')}}" method="post" >
                             @csrf
@@ -96,7 +96,7 @@
                             <h5 class="font-weight-bold">Total</h5>
                             <h5 class="font-weight-bold">{{$real_price_tax}}</h5>
                         </div>
-                        <button class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button>
+                        <a href="{{route('checkout')}}" style="text-decoration: none;"><button class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button></a>
                     </div>
                 </div>
             </div>

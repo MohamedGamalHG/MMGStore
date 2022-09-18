@@ -86,7 +86,7 @@ class HomePageController extends Controller
         return $this->home->Shop_Cart();
     }
     public function Checkout(){
-        return view('Customer.checkout');
+        return $this->home->Checkout();
     }
 
     public function ajaxColor(Request $request){

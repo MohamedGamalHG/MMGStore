@@ -47,8 +47,9 @@ Route::group([
 
 Route::resource('/','HomePageController');
 Route::get('shop','HomePageController@Shop_list')->name('shop');
+
 Route::get('shop-cart','HomePageController@Shop_Cart')->name('shop-cart');
-Route::get('checkout','HomePageController@Checkout')->name('checkout');
+Route::get('checkout','HomePageController@Checkout')->name('checkout')->middleware('Customer:customer');
 
 Route::get('shop-details/{id}','HomePageController@Shop_Detail')->name('shop-details');
 Route::get('add-cart/{id}','HomePageController@Add_Cart')->name('add-cart');
@@ -64,5 +65,11 @@ Route::get('login_customer','HomePageController@Login_Customer_View')->name('pag
 Route::post('login_customer','HomePageController@Login_Customer')->name('page.login_customer');
 Route::get('register_customer','HomePageController@Register_Customer_View')->name('page.register');
 Route::post('register_customer','HomePageController@Register_Customer')->name('page.register_customer');
+
+    /*Route::group(['middleware'=>'Customer:customer'],function (){
+        Route::get('shop-cart','HomePageController@Shop_Cart')->name('shop-cart');
+    Route::get('checkout','HomePageController@Checkout')->name('checkout')->middleware('Customer:customer');
+
+    });*/
 
 });

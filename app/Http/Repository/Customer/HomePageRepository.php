@@ -30,7 +30,6 @@ class HomePageRepository implements HomePageRepositoryInterface
     }
     public function Add_Cart($id)
     {
-
         $product_id = Product::with('images')->findOrFail($id);
         $product_image = $product_id->id .'/'. $product_id->images[0]->name;
         $carts = new Cart();
@@ -45,11 +44,28 @@ class HomePageRepository implements HomePageRepositoryInterface
     }
     public function Item_Add($request)
     {
-        return $request;
-        $cart_id = Cart::findOrFail($request->id);
-        $cart_id->update([
-            'total'     => $cart_id->total * $request->add_quantity
-        ]);
+
+        if(!empty($request->size) && !empty($request->color))
+        {
+            $product_id = Product::with('images')->findOrFail($request->product_id);
+            $product_image = $product_id->id .'/'. $product_id->images[0]->name;
+            $carts = new Cart();
+            $carts->item = $product_id->name;
+            $carts->price = $product_id->price;
+            $carts->total = $product_id->price;
+            $carts->quantity = $request->quantity;
+            $carts->src_image = $product_image;
+            $carts->save();
+
+            return redirect()->route('shop');
+        }
+        else {
+            //return $request;
+            $cart_id = Cart::findOrFail($request->id);
+            $cart_id->update([
+                'quantity' => $request->add_quantity
+            ]);
+        }
         return redirect()->back();
     }
     public function Item_Delete($request)
@@ -59,15 +75,34 @@ class HomePageRepository implements HomePageRepositoryInterface
         return redirect()->back();
     }
 
+
+    private function Real_Price()
+    {
+        $total_price = Cart::select('price','quantity')->get();
+        $real_price = 0;
+        $tax=.06;
+        foreach ($total_price as $t_p) { $real_price = $real_price + ($t_p->price*$t_p->quantity); }
+        $real_price_tax = $real_price + ($real_price*$tax);
+        $Price['real'] = $real_price;
+        $Price['tax']   = $real_price_tax;
+        return $Price;
+    }
+
+
     public function Shop_Cart()
     {
         $carts = Cart::get();
-        $total_price = Cart::select('total')->get();
-        $real_price = 0;
-        $tax=.06;
-        foreach ($total_price as $t_p) { $real_price = $real_price + $t_p->total; }
-        $real_price_tax = $real_price + ($real_price*$tax);
+        $real_price = $this->Real_Price()['real'];
+        $real_price_tax = $this->Real_Price()['tax'];
         return view('Customer.shopping_cart',compact('carts','real_price','real_price_tax'));
+    }
+
+    public function Checkout()
+    {
+        $carts = Cart::all();
+        $real_price = $this->Real_Price()['real'];
+        $real_price_tax = $this->Real_Price()['tax'];
+        return view('Customer.checkout',compact('carts','real_price','real_price_tax'));
     }
 
     public function Shop_list()
@@ -81,20 +116,6 @@ class HomePageRepository implements HomePageRepositoryInterface
         return view('Customer.product_list',compact('product'));
     }
 
-    public function store($request)
-    {
-        // TODO: Implement store() method.
-    }
-
-    public function update($request)
-    {
-        // TODO: Implement update() method.
-    }
-
-    public function delete($request)
-    {
-        // TODO: Implement delete() method.
-    }
 
     public function Login_Customer_View(){
         $category = Category::all();
