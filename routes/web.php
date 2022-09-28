@@ -42,7 +42,7 @@ Route::group([
 
 Route::group([
             'namespace'     => 'App\Http\Controllers\Customer',
-            'prefix'        =>  ''
+            'prefix'        =>  '/'
             ],function (){
 
 Route::resource('/','HomePageController');
